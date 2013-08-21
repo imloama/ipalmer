@@ -1,0 +1,9 @@
+用户表
+角色表
+===============================
+sys_user
+----------
+id		int
+name		character varying(50)
+nickname	character varying(50)
+password	character varying(50)		采用不可逆方式进行加密

@@ -1,0 +1,2 @@
+<#macro text >
+</#macro>

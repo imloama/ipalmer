@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+
+	<context:component-scan base-package="com.palmer.permission.controller,com.palmer.pm.controller"
+		use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<mvc:view-controller path="/" view-name="redirect:/index" />
+
+	<mvc:annotation-driven>
+		<!--  <mvc:message-converters> 
+			<bean class = "org.springframework.http.converter.StringHttpMessageConverter"> 
+			<property name = "supportedMediaTypes"> <list> <value>text/plain;charset=UTF-8</value> 
+			</list> </property> </bean> </mvc:message-converters> <mvc:argument-resolvers> 
+			<bean class="org.exitsoft.orm.core.spring.data.web.PageableArgumentResolver" 
+			/> </mvc:argument-resolvers> -->
+	</mvc:annotation-driven>
+
+	<mvc:resources mapping="/asssets/**" location="/assets/" />
+
+	<mvc:default-servlet-handler />
+
+	<bean id="freemarkerConfigurer"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">10</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="number_format">#.##</prop>
+				<prop key="defaultEncoding">UTF-8</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- ========================����spring3.2���ϵͳview�ܹ� REST============================== -->
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="order" value="1" />
+		<property name="contentNegotiationManager">
+			<bean class="org.springframework.web.accept.ContentNegotiationManager">
+				<constructor-arg>
+					<bean
+						class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+						<constructor-arg>
+							<map>
+								<entry key="htm" value="text/html;charset=utf-8" />
+								<entry key="json" value="application/json;charset=utf-8" />
+								<entry key="xml" value="application/xml;charset=utf-8" />
+								<entry key="pdf" value="application/pdf;charset=utf-8" />
+								<entry key="xsl" value="application/vnd.ms-excel;charset=utf-8" />
+							</map>
+						</constructor-arg>
+					</bean>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<!-- JSON View -->
+				<bean
+					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+				<!-- XML View -->
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<constructor-arg>
+						<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+							<property name="packagesToScan">
+								<list>
+									<value>com.palmer</value>
+								</list>
+							</property>
+						</bean>
+					</constructor-arg>
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+	<!-- freemarker view -->
+				<bean
+					class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+					<property name="suffix" value=".ftl" />
+					<property name="requestContextAttribute" value="request" />
+					<property name="contentType" value="text/html;charset=UTF-8" />
+				</bean>
+	<!-- jsp view -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- =============================������==================================== -->
+	<mvc:interceptors>
+		<!-- ======��ȡurl�����δ��½���û������ܴ�session���ҵ��û���Ϣ�����ж�Ϊ�û�δ��½����ת��loginҳ��========= -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/login"/>
+			<mvc:exclude-mapping path="/index"/>
+			<mvc:exclude-mapping path="/assets/**"/>
+			<bean class="i.palmer.interceptor.SystemInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- �ļ��ϴ���� <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+		<property name="maxUploadSize" value="100000" /> </bean> -->
+	<!-- �������쳣���� <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> 
+		<property name="exceptionMappings"> <props> <prop key="java.lang.Exception"> 
+		error_all </prop> </props> </property> </bean> -->
+</beans>

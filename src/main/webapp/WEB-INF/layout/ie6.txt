@@ -1,0 +1,13 @@
+ 	<!--[if lte IE 6]>
+	<!-- bsie css 补丁文件 -->
+	<link rel="stylesheet" type="text/css" href="assets/js/bootstrap/bsie/bootstrap-ie6.css">
+	
+	<!-- bsie 额外的 css 补丁文件 -->
+	<link rel="stylesheet" type="text/css" href="assets/js/bootstrap/bsie/ie.css">
+	<![endif]-->
+
+	
+	<!--[if lte IE 6]>
+  	<!-- bsie js 补丁只在IE6中才执行 -->
+  	<script type="text/javascript" src="assets/js/bootstrap/bsie/bootstrap-ie.js"></script>
+  	<![endif]-->
