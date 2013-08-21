@@ -1,0 +1,4 @@
+git add xxx
+git commit -m 'xxx'
+#$git remote add origingit@github.com:<ÄãµÄÕÊºÅ>/helloworld.git  
+$git push ¨Cu origin master
